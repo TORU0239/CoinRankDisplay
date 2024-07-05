@@ -46,7 +46,7 @@ val httpClientAndroid = HttpClient(Android) {
                 Log.v("Logger Ktor =>", message)
             }
         }
-        level = LogLevel.ALL
+        level = LogLevel.BODY
     }
 
     install(ResponseObserver) {
