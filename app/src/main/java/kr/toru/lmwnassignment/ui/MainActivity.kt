@@ -1,6 +1,7 @@
 package kr.toru.lmwnassignment.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -40,11 +41,15 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-            val drinks = remoteRepository.getDrinks()
+            val drinks = remoteRepository.getDrinks().runCatching {
+                getOrThrow().drinks
+            }
             drinks.onSuccess {
                 it.forEach { drink ->
                     println("Drink Name: ${drink.strDrink}")
                 }
+            }.onFailure {
+                Log.e("Toru", "Error: ${it.message}")
             }
         }
     }
