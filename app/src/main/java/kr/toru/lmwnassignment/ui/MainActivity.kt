@@ -1,10 +1,13 @@
 package kr.toru.lmwnassignment.ui
 
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import coil.decode.SvgDecoder
+import coil.load
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         test()
+        loadImage()
     }
 
     private fun test() {
@@ -42,6 +46,13 @@ class MainActivity : AppCompatActivity() {
                     println("Drink Name: ${drink.strDrink}")
                 }
             }
+        }
+    }
+
+    private fun loadImage() {
+        val image = findViewById<ImageView>(R.id.img)
+        image.load("https://cdn.coinranking.com/mgHqwlCLj/usdt.svg") {
+            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
         }
     }
 }
