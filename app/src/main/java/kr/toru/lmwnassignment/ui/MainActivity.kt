@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.decode.SvgDecoder
 import coil.load
-import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,13 +40,12 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-            val drinks = remoteRepository.getDrinks().runCatching {
-                getOrThrow().drinks
-            }
-            drinks.onSuccess {
-                it.forEach { drink ->
-                    println("Drink Name: ${drink.strDrink}")
-                }
+            val coins = remoteRepository.getCoins().getOrNull()?.data?.coins
+
+            remoteRepository.getCoinDetail(coins?.first()?.uuid ?: "Qwsogvtv82FCd").runCatching {
+                getOrThrow().data.coin
+            }.onSuccess {
+                println("Coin Name: ${it.name}, 24hVolume: ${it.volumeFor24h}")
             }.onFailure {
                 Log.e("Toru", "Error: ${it.message}")
             }
