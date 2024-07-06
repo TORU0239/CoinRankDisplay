@@ -35,20 +35,11 @@ class ApiService(private val httpClient: HttpClient) {
 
     suspend fun getCoins() = apiCall(BASE_URL + COINS_API)
 
-    suspend fun getCoinDetail(coinUUID: String) = httpClient.get("$BASE_URL$COIN_API/$coinUUID") {
-        headers {
-            append("Content-Type", CONTENT_TYPE)
-            append("x-access-token", API_KEY)
-        }
-    }
+    suspend fun getCoinDetail(coinUUID: String) = apiCall("$BASE_URL$COIN_API/$coinUUID")
 
-    suspend fun searchCoin(query: String) = httpClient.get(BASE_URL + SEARCH_API) {
-        headers {
-            append("Content-Type", CONTENT_TYPE)
-            append("x-access-token", API_KEY)
-        }
-        url {
-            parameters.append("query", query)
-        }
-    }
+    suspend fun searchCoin(query: String) = apiCall(
+        BASE_URL + SEARCH_API,
+        mapOf("query" to query)
+    )
+
 }
