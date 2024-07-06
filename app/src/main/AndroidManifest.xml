@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LmwnAssignment"
+        android:name=".app.MainApplication"
         tools:targetApi="34">
 
         <activity

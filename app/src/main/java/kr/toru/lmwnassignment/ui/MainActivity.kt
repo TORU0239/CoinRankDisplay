@@ -4,23 +4,32 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.load
 import coil.request.ImageRequest
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kr.toru.lmwnassignment.R
 import kr.toru.lmwnassignment.data.repository.RemoteRepository
 import kr.toru.lmwnassignment.network.ApiService
 import kr.toru.lmwnassignment.network.httpClientAndroid
 import kr.toru.lmwnassignment.util.imageloading.getImageLoader
+import kr.toru.lmwnassignment.vm.MainViewModel
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,37 +40,30 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        test()
-        loadImage()
-    }
-
-    private fun test() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val remoteRepository = RemoteRepository(
-                apiService = ApiService(
-                    httpClient = httpClientAndroid
-                )
-            )
-
-//            val coins = remoteRepository.getCoins().getOrNull()?.data?.coins
-//
-//            remoteRepository.getCoinDetail(coins?.first()?.uuid ?: "Qwsogvtv82FCd").runCatching {
-//                getOrThrow().data.coin
-//            }.onSuccess {
-//                println("Coin Name: ${it.name}, 24hVolume: ${it.volumeFor24h}")
-//            }.onFailure {
-//                Log.e("Toru", "Error: ${it.message}")
-//            }
-
-            remoteRepository.searchCoin("usdt").runCatching {
-                getOrThrow().data.coins
-            }.onSuccess {
-                println("Search Result: ${it.first().name}, price: ${it.first().price}")
-            }.onFailure {
-                Log.e("Toru", "Error: ${it.message}")
+        lifecycleScope.launch {
+            viewModel.outputEventFlow.collect { result ->
+                when(result) {
+                    is MainViewModel.Event.Success -> {
+                        result.data.forEach {
+                            Log.d("Toru", "Coin Name: ${it.name}, 24hVolume: ${it.volumeFor24h}")
+                        }
+                    }
+                    is MainViewModel.Event.Failure -> {
+                        Log.e("Toru", "Failure")
+                    }
+                }
             }
         }
+
+        loadCoinList()
     }
+
+    private fun loadCoinList() {
+        lifecycleScope.launch {
+            viewModel.getCoins()
+        }
+    }
+
 
     private fun loadImage() {
         val image = findViewById<ImageView>(R.id.img)

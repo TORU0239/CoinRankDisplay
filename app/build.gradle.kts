@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.jetbrainsKotlinKAPT)
 }
 
 android {
@@ -39,12 +41,18 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.coroutines)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.viewmodel.ktx)
 
     implementation(libs.ktor.core)
     implementation(libs.ktor.cio)
@@ -57,6 +65,9 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.svg)
+
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -6,11 +6,12 @@ import kr.toru.lmwnassignment.data.response.CoinResponse
 import kr.toru.lmwnassignment.data.response.CoinSuggestionResponse
 import kr.toru.lmwnassignment.network.ApiService
 
+@Deprecated("This class is deprecated, use UseCases for your purposes instead")
 class RemoteRepository(
     private val apiService: ApiService
 ) {
     suspend fun getCoins(): Result<CoinResponse> =
-        kotlin.runCatching {
+        runCatching {
             apiService.getCoins().body<CoinResponse>()
         }
 
