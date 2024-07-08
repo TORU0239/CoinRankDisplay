@@ -12,33 +12,33 @@ import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
 
 class CoinListAdapter(
     private val listItem: List<ItemViewModel>
-): RecyclerView.Adapter<ViewHolder>() {
+): RecyclerView.Adapter<ItemViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             0 -> {
-                val binding = CoinTopRankListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                TopRankCoinItemViewHolder(binding)
+                TopRankCoinItemViewHolder(
+                    CoinTopRankListItemBinding.inflate(inflater, parent, false)
+                )
             }
             1 -> {
-                val binding = CoinListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return CoinListItemViewHolder(binding)
+                CoinListItemViewHolder(
+                    CoinListItemBinding.inflate(inflater, parent, false)
+                )
             }
             else -> {
-                val binding = InviteFriendListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return InviteFriendItemViewHolder(binding)
+                InviteFriendItemViewHolder(
+                    InviteFriendListItemBinding.inflate(inflater, parent, false)
+                )
             }
         }
     }
 
     override fun getItemCount() = listItem.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        when (getItemViewType(position)) {
-            0 -> (holder as TopRankCoinItemViewHolder).bind(listItem[position])
-            1 -> (holder as CoinListItemViewHolder).bind(listItem[position])
-            else -> (holder as InviteFriendItemViewHolder).bind(listItem[position])
-        }
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        holder.bind(listItem[position])
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -66,20 +66,20 @@ sealed class ItemViewModel {
 
 
 class TopRankCoinItemViewHolder(private val binding: CoinTopRankListItemBinding)
-    : ItemViewHolder<ItemViewModel, CoinTopRankListItemBinding>(binding) {
+    : ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {}
 }
 
 class CoinListItemViewHolder(private val binding: CoinListItemBinding)
-    : ItemViewHolder<ItemViewModel, CoinListItemBinding>(binding) {
+    : ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {}
 }
 
 class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBinding)
-    : ItemViewHolder<ItemViewModel, InviteFriendListItemBinding>(binding) {
+    : ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {}
 }
 
-abstract class ItemViewHolder<T, VB: ViewBinding>(private val binding: VB): ViewHolder(binding.root) {
-    abstract fun bind(model: T)
+abstract class ItemViewHolder(private val binding: ViewBinding): ViewHolder(binding.root) {
+    abstract fun bind(model: ItemViewModel)
 }
