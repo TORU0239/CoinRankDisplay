@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="entire_background">#FFFFFF</color>
-    <color name="ed_background">#EEEEEE</color>
-    <color name="separator">#EEEEEE</color>
+    <color name="entire_background">#333333</color>
+    <color name="ed_background">#555555</color>
+    <color name="separator">#555555</color>
 </resources>
