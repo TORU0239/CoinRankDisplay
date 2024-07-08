@@ -6,4 +6,17 @@
     <color name="entire_background">#FFFFFF</color>
     <color name="ed_background">#EEEEEE</color>
     <color name="separator">#EEEEEE</color>
+
+    <color name="listBackground">#F9F9F9</color>
+
+    <color name="coinItemTextColor">#333333</color>
+    <color name="coinSymbolTextColor">#999999</color>
+
+    <color name="coinPriceUpColor">#13BC24</color>
+    <color name="coinPriceDownColor">#F82D2D</color>
+
+    <color name="coinListItemTitleColor">#000000</color>
+
+    <color name="topCoinListTitleColor">#333333</color>
+    <color name="topCoinListTitleColor2">#F82D2D</color>
 </resources>

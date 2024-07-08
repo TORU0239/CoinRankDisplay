@@ -1,24 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
+    app:cardElevation="14dp"
+    app:cardBackgroundColor="@color/listBackground"
     app:cardCornerRadius="10dp"
-    app:contentPadding="10dp">
+    app:contentPadding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TST"
+        <ImageView
+            android:id="@+id/imgCoin"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <Space
+            android:id="@+id/spaceImgCoin"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            app:layout_constraintTop_toBottomOf="@id/imgCoin"
+            app:layout_constraintStart_toStartOf="@id/imgCoin"/>
+
+        <TextView
+            android:id="@+id/tvCoinName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/coinItemTextColor"
+            android:includeFontPadding="false"
+            app:layout_constraintStart_toEndOf="@id/imgCoin"
+            app:layout_constraintTop_toTopOf="@id/imgCoin"
+            tools:text="Bitcoin"/>
+
+        <TextView
+            android:id="@+id/tvCoinSymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/coinSymbolTextColor"
+            android:includeFontPadding="false"
+            app:layout_constraintStart_toEndOf="@id/imgCoin"
+            app:layout_constraintBottom_toBottomOf="@id/imgCoin"
+            tools:text="BTC"/>
+
+        <TextView
+            android:id="@+id/tvCoinPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/coinItemTextColor"
+            android:includeFontPadding="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgCoin"
+            tools:text="$56,671.41180"/>
+
+        <TextView
+            android:id="@+id/tvCoinPriceTrend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/coinPriceUpColor"
+            android:includeFontPadding="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/imgCoin"
+            tools:text="1.07"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
