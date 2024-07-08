@@ -19,4 +19,6 @@
 
     <color name="topCoinListTitleColor">#333333</color>
     <color name="topCoinListTitleColor2">#F82D2D</color>
+
+    <color name="inviteFriendBgColor">#C5E6FF</color>
 </resources>
