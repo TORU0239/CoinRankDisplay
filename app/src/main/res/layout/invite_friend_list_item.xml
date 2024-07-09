@@ -41,7 +41,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:textSize="16sp"
-            android:textColor="@color/coinItemTextColor"
+            android:textColor="@color/inviteFriendTextColor"
             android:includeFontPadding="false"
             android:text="@string/invite_friend"
             app:layout_constraintStart_toEndOf="@id/imgInvite"

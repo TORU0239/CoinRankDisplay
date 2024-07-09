@@ -1,7 +1,6 @@
 package kr.toru.lmwnassignment.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -56,10 +55,10 @@ class MainActivity : AppCompatActivity() {
             viewModel.outputEventFlow.collect { result ->
                 when(result) {
                     is MainViewModel.Event.Success -> {
-                        (binding.rvSearchResult.adapter as CoinListAdapter).setData(convertResponse(result.data))
+                        (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(convertResponse(result.data))
                     }
                     is MainViewModel.Event.Failure -> {
-                        (binding.rvSearchResult.adapter as CoinListAdapter).setData(result.data)
+                        (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(result.data)
                     }
 
                     is MainViewModel.Event.Loading -> {
@@ -90,7 +89,6 @@ class MainActivity : AppCompatActivity() {
                 // top 3 ranking
                 val topRankingItemViewModel = listOf(
                     ItemViewModel.TopRankingCoinItemViewModel(
-//                        rankedCoinList = coinInfoResponses.subList(0, 3)
                         rankedCoinList = first3RankedItems
                     )
                 )

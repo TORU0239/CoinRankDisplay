@@ -22,7 +22,8 @@
     <color name="topCoinListTitleColor">#FFFFFF</color>
     <color name="topCoinListTitleColor2">#FFEB3B</color>
 
-    <color name="inviteFriendBgColor">#F9F9F9</color>
+    <color name="inviteFriendBgColor">#C5E6FF</color>
+    <color name="inviteFriendTextColor">#333333</color>
 
     <color name="progressBarColor">#38A0FF</color>
 

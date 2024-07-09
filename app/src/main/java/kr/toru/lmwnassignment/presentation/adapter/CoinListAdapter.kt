@@ -72,7 +72,7 @@ class CoinListAdapter(
         }
     }
 
-    fun setData(newItemList: List<ItemViewModel>) {
+    fun addNewData(newItemList: List<ItemViewModel>) {
         clearPreviousLoadingData()
         val startPosition = listItem.size
         listItem += newItemList
@@ -80,16 +80,6 @@ class CoinListAdapter(
     }
 
     private fun clearPreviousLoadingData() {
-//        if (listItem.size == 1) {
-//            if (listItem[0] is ItemViewModel.LoadFailureItemViewModel) {
-//                listItem = emptyList()
-//                notifyItemChanged(0)
-//            }
-//        }
-        clearLoadingFailureData()
-    }
-
-    private fun clearLoadingFailureData() {
         listItem = listItem.filterList {
             !instanceOf(ItemViewModel.LoadFailureItemViewModel::class)
         }
