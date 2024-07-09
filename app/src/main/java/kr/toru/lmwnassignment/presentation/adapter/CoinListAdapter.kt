@@ -17,6 +17,7 @@ import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
 import kr.toru.lmwnassignment.databinding.LoadFailureListItemBinding
 import kr.toru.lmwnassignment.databinding.TextListItemBinding
+import okhttp3.internal.filterList
 import kotlin.math.absoluteValue
 
 class CoinListAdapter(
@@ -79,12 +80,20 @@ class CoinListAdapter(
     }
 
     private fun clearPreviousLoadingData() {
-        if (listItem.size == 1) {
-            if (listItem[0] is ItemViewModel.LoadFailureItemViewModel) {
-                listItem = emptyList()
-                notifyItemChanged(0)
-            }
+//        if (listItem.size == 1) {
+//            if (listItem[0] is ItemViewModel.LoadFailureItemViewModel) {
+//                listItem = emptyList()
+//                notifyItemChanged(0)
+//            }
+//        }
+        clearLoadingFailureData()
+    }
+
+    private fun clearLoadingFailureData() {
+        listItem = listItem.filterList {
+            !instanceOf(ItemViewModel.LoadFailureItemViewModel::class)
         }
+        notifyDataSetChanged()
     }
 }
 
