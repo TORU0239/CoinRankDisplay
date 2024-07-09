@@ -1,6 +1,5 @@
 package kr.toru.lmwnassignment.presentation.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.decode.SvgDecoder
-import coil.load
 import coil.request.ImageRequest
 import kr.toru.lmwnassignment.R
 import kr.toru.lmwnassignment.data.response.CoinInfoResponse
@@ -93,22 +91,63 @@ sealed class ItemViewModel {
 
 class TopRankCoinItemViewHolder(private val binding: CoinTopRankListItemBinding)
     : ItemViewHolder(binding) {
+
+    private val imageLoader = ImageLoader.Builder(binding.root.context)
+        .components {
+            add(SvgDecoder.Factory())
+        }
+        .build()
+
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.TopRankingCoinItemViewModel
         binding.coinTopRankItems.txtCoinSymbol1.text = model.rankedCoinList[0].symbol
         binding.coinTopRankItems.txtCoinSymbol2.text = model.rankedCoinList[1].symbol
         binding.coinTopRankItems.txtCoinSymbol3.text = model.rankedCoinList[2].symbol
 
-        binding.coinTopRankItems.imgBitCoin1.load(model.rankedCoinList[0].iconUrl) {
-            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
-        }
+        imageLoader.enqueue(
+            ImageRequest.Builder(binding.root.context)
+                .data(model.rankedCoinList[0].iconUrl)
+                .target(binding.coinTopRankItems.imgBitCoin1)
+                .build()
+        )
 
-        binding.coinTopRankItems.imgBitCoin2.load(model.rankedCoinList[1].iconUrl) {
-            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
-        }
+        imageLoader.enqueue(
+            ImageRequest.Builder(binding.root.context)
+                .data(model.rankedCoinList[1].iconUrl)
+                .target(binding.coinTopRankItems.imgBitCoin2)
+                .build()
+        )
 
-        binding.coinTopRankItems.imgBitCoin3.load(model.rankedCoinList[2].iconUrl) {
-            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
+        imageLoader.enqueue(
+            ImageRequest.Builder(binding.root.context)
+                .data(model.rankedCoinList[2].iconUrl)
+                .target(binding.coinTopRankItems.imgBitCoin3)
+                .build()
+        )
+
+        binding.coinTopRankItems.txtCoinName1.text = model.rankedCoinList[0].name
+        binding.coinTopRankItems.txtCoinName2.text = model.rankedCoinList[1].name
+        binding.coinTopRankItems.txtCoinName.text = model.rankedCoinList[2].name
+
+        binding.coinTopRankItems.tvCoinPriceTrend1.text = model.rankedCoinList[0].change.toDouble().absoluteValue.toString()
+        binding.coinTopRankItems.tvCoinPriceTrend2.text = model.rankedCoinList[1].change.toDouble().absoluteValue.toString()
+        binding.coinTopRankItems.tvCoinPriceTrend.text = model.rankedCoinList[2].change.toDouble().absoluteValue.toString()
+
+
+        for (i in 0 until 3) {
+            val (textColor, image) = model.rankedCoinList[i].change.toPriceTrendColor()
+            val textView = when(i) {
+                0 -> binding.coinTopRankItems.tvCoinPriceTrend1
+                1 -> binding.coinTopRankItems.tvCoinPriceTrend2
+                else -> binding.coinTopRankItems.tvCoinPriceTrend
+            }
+
+            textView.setTextColor(
+                ContextCompat.getColor(binding.root.context, textColor)
+            )
+            textView.setCompoundDrawablesWithIntrinsicBounds(
+                image, 0, 0, 0
+            )
         }
     }
 }

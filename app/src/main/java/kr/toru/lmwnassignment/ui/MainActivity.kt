@@ -88,8 +88,23 @@ class MainActivity : AppCompatActivity() {
                     coinInfo = it
                 )
             }
+            val mutableList = mutableListOf<ItemViewModel>()
+            mutableList.addAll(0, coinItemViewModel)
 
-            return topRankingItemViewModel + textSectionItemViewModel + coinItemViewModel
+            var neededIndex = 5
+            for (i in 0 until mutableList.size) {
+                if (neededIndex < mutableList.size) {
+                    mutableList.add(
+                        neededIndex - 1,
+                        ItemViewModel.InviteFriendItemViewModel(
+                            clickListener = {}
+                        )
+                    )
+                    neededIndex *= 2
+                }
+            }
+
+            return topRankingItemViewModel + textSectionItemViewModel + mutableList
 
         } else {
             return listOf(
