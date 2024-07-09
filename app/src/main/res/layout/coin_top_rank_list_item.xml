@@ -18,7 +18,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Top"/>
+        android:text="Top"/>
 
     <TextView
         android:id="@+id/txtTopRankCoinTitle2"
@@ -31,7 +31,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/txtTopRankCoinTitle"
         app:layout_constraintTop_toTopOf="@id/txtTopRankCoinTitle"
-        tools:text="3"/>
+        android:text="3"/>
 
     <TextView
         android:id="@+id/txtTopRankCoinTitle3"
@@ -40,12 +40,11 @@
         android:layout_marginStart="6dp"
         android:textSize="16sp"
         android:includeFontPadding="false"
-        app:textFontWeight="500"
         android:textColor="@color/topCoinListTitleColor"
         app:layout_constraintStart_toEndOf="@id/txtTopRankCoinTitle2"
         app:layout_constraintTop_toTopOf="@id/txtTopRankCoinTitle"
         app:layout_constraintBottom_toBottomOf="@id/txtTopRankCoinTitle"
-        tools:text="rank crypto"/>
+        android:text="rank crypto"/>
 
     <include
         android:id="@+id/coinTopRankItems"

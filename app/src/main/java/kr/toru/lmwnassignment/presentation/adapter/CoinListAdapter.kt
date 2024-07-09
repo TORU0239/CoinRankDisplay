@@ -11,7 +11,7 @@ import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
 
 class CoinListAdapter(
-    private val listItem: List<ItemViewModel>
+    private var listItem: List<ItemViewModel> = listOf()
 ): RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -47,6 +47,12 @@ class CoinListAdapter(
             is ItemViewModel.CoinItemViewModel -> 1
             is ItemViewModel.InviteFriendItemViewModel -> 2
         }
+    }
+
+    fun setData(newItemList: List<ItemViewModel>) {
+        val startPosition = listItem.size
+        listItem += newItemList
+        notifyItemRangeInserted(startPosition, newItemList.size)
     }
 }
 
