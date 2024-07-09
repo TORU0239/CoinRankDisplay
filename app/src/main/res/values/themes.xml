@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.LmwnAssignment" parent="Base.Theme.LmwnAssignment" />
+
+    <style name="Theme.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/progressBarColor</item>
+    </style>
 </resources>

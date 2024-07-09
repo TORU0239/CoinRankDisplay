@@ -2,6 +2,7 @@ package kr.toru.lmwnassignment.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -50,14 +51,15 @@ class MainActivity : AppCompatActivity() {
             viewModel.outputEventFlow.collect { result ->
                 when(result) {
                     is MainViewModel.Event.Success -> {
-                        result.data.forEach {
-                            Log.d("Toru", "Coin Name: ${it.name}, 24hVolume: ${it.volumeFor24h}")
-                        }
-
                         (binding.rvSearchResult.adapter as CoinListAdapter).setData(convertResponse(result.data))
                     }
                     is MainViewModel.Event.Failure -> {
                         Log.e("Toru", "Failure")
+                        // TODO: showing error message
+                    }
+
+                    is MainViewModel.Event.Loading -> {
+                        binding.progressBar.visibility = if (result.isLoading) View.VISIBLE else View.GONE
                     }
                 }
             }
@@ -73,6 +75,12 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
+            val textSectionItemViewModel = listOf(
+                ItemViewModel.TextSectionItemViewModel(
+                    title = "Buy,sell, and hold crypto"
+                )
+            )
+
             val remainedCoinResponse = coinInfoResponses.subList(3, coinInfoResponses.size)
 
             val coinItemViewModel = remainedCoinResponse.map {
@@ -81,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            return topRankingItemViewModel + coinItemViewModel
+            return topRankingItemViewModel + textSectionItemViewModel + coinItemViewModel
 
         } else {
             return listOf(

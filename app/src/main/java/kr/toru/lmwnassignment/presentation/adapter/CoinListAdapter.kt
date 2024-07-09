@@ -1,7 +1,9 @@
 package kr.toru.lmwnassignment.presentation.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
@@ -14,6 +16,8 @@ import kr.toru.lmwnassignment.data.response.CoinInfoResponse
 import kr.toru.lmwnassignment.databinding.CoinListItemBinding
 import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
+import kr.toru.lmwnassignment.databinding.TextListItemBinding
+import kotlin.math.absoluteValue
 
 class CoinListAdapter(
     private var listItem: List<ItemViewModel> = listOf()
@@ -32,6 +36,12 @@ class CoinListAdapter(
                     CoinListItemBinding.inflate(inflater, parent, false)
                 )
             }
+            2 -> {
+                TextSectionItemViewHolder(
+                    TextListItemBinding.inflate(inflater, parent, false)
+                )
+            }
+
             else -> {
                 InviteFriendItemViewHolder(
                     InviteFriendListItemBinding.inflate(inflater, parent, false)
@@ -50,7 +60,8 @@ class CoinListAdapter(
         return when(listItem[position]){
             is ItemViewModel.TopRankingCoinItemViewModel -> 0
             is ItemViewModel.CoinItemViewModel -> 1
-            is ItemViewModel.InviteFriendItemViewModel -> 2
+            is ItemViewModel.TextSectionItemViewModel -> 2
+            is ItemViewModel.InviteFriendItemViewModel -> 3
         }
     }
 
@@ -72,6 +83,10 @@ sealed class ItemViewModel {
 
     data class InviteFriendItemViewModel(
         val clickListener: () -> Unit
+    ): ItemViewModel()
+
+    data class TextSectionItemViewModel(
+        val title: String
     ): ItemViewModel()
 }
 
@@ -114,11 +129,14 @@ class CoinListItemViewHolder(private val binding: CoinListItemBinding)
             binding.tvCoinName.text = name
             binding.tvCoinSymbol.text = symbol
             binding.tvCoinPrice.text = price
-            binding.tvCoinPriceTrend.text = change
-            change.toPriceTrendColor().run {
-                binding.tvCoinPriceTrend.setTextColor(first)
-                binding.imgCoinPriceTrend.setImageResource(second)
-            }
+            binding.tvCoinPriceTrend.text = change.toDouble().absoluteValue.toString()
+
+            val (textColor, image) = change.toPriceTrendColor()
+
+            binding.tvCoinPriceTrend.setTextColor(
+                ContextCompat.getColor(binding.root.context, textColor)
+            )
+            binding.imgCoinPriceTrend.setImageResource(image)
 
             imageLoader.enqueue(
                 ImageRequest.Builder(binding.root.context)
@@ -140,6 +158,13 @@ private fun String.toPriceTrendColor() =
 class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBinding)
     : ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {}
+}
+
+class TextSectionItemViewHolder(private val binding: TextListItemBinding): ItemViewHolder(binding) {
+    override fun bind(model: ItemViewModel) {
+        model as ItemViewModel.TextSectionItemViewModel
+        binding.txtTitle.text = model.title
+    }
 }
 
 abstract class ItemViewHolder(private val binding: ViewBinding): ViewHolder(binding.root) {

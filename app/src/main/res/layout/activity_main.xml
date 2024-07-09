@@ -36,7 +36,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edInputQuery"/>
 
-
     <!-- search result keyword recyclerview -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearchResult"
@@ -49,5 +48,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separator"
         tools:listitem="@layout/coin_list_item"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Theme.ProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:progressTint="@color/progressBarColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rvSearchResult"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

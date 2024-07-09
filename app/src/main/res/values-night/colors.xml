@@ -9,6 +9,8 @@
 
     <color name="listBackground">#3C3C3C</color>
 
+    <color name="sectionTextColor">#FFFFFF</color>
+
     <color name="coinItemTextColor">#FFFFFF</color>
     <color name="coinSymbolTextColor">#C4C4C4</color>
 
@@ -21,4 +23,6 @@
     <color name="topCoinListTitleColor2">#FFEB3B</color>
 
     <color name="inviteFriendBgColor">#F9F9F9</color>
+
+    <color name="progressBarColor">#38A0FF</color>
 </resources>

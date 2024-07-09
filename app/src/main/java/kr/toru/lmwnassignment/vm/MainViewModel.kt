@@ -19,13 +19,17 @@ class MainViewModel @Inject constructor(
     val outputEventFlow = _outputEventFlow
 
     suspend fun getCoins() {
+        Event.Loading().emitEvent()
         viewModelScope.launch {
             getCoinsUseCase.getCoins()
                 .onSuccess {
                     Event.Success(data = it.data.coins).emitEvent()
+                    Event.Loading(isLoading = false).emitEvent()
+
                 }
                 .onFailure {
                     Event.Failure.emitEvent()
+                    Event.Loading(isLoading = false).emitEvent()
                 }
         }
     }
@@ -35,10 +39,15 @@ class MainViewModel @Inject constructor(
     }
 
 
-    sealed class Event {
+    sealed interface Event {
+        data class Loading(
+            val isLoading: Boolean = true
+        ) : Event
+
         data class Success(
             val data: List<CoinInfoResponse>
-        ): Event()
-        data object Failure: Event()
+        ): Event
+
+        data object Failure: Event
     }
 }
