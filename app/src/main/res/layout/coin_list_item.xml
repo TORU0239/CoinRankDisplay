@@ -34,15 +34,18 @@
 
         <TextView
             android:id="@+id/tvCoinName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/coinItemTextColor"
             android:includeFontPadding="false"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintStart_toEndOf="@id/imgCoin"
             app:layout_constraintTop_toTopOf="@id/imgCoin"
+            app:layout_constraintEnd_toEndOf="@id/guidelineCoinPrice"
             tools:text="Bitcoin"/>
 
         <TextView
@@ -58,14 +61,23 @@
             app:layout_constraintBottom_toBottomOf="@id/imgCoin"
             tools:text="BTC"/>
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineCoinPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.6"/>
+
         <TextView
             android:id="@+id/tvCoinPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@color/coinItemTextColor"
             android:includeFontPadding="false"
+            android:gravity="end"
+            app:layout_constraintStart_toEndOf="@id/guidelineCoinPrice"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/imgCoin"
             tools:text="$56,671.41180"/>
