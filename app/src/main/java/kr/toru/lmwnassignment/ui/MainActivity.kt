@@ -16,7 +16,6 @@ import kr.toru.lmwnassignment.databinding.ActivityMainBinding
 import kr.toru.lmwnassignment.presentation.adapter.CoinListAdapter
 import kr.toru.lmwnassignment.presentation.adapter.ItemViewModel
 import kr.toru.lmwnassignment.vm.MainViewModel
-import okhttp3.internal.filterList
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -67,23 +66,30 @@ class MainActivity : AppCompatActivity() {
 
     // temporary item transformer
     private fun convertResponse(coinInfoResponses: List<CoinInfoResponse>): List<ItemViewModel> {
-        val top3RankedCoins = coinInfoResponses.filterList{
-            rank in 1..3
-        }
-
-        val topRankingItemViewModel = listOf(
-            ItemViewModel.TopRankingCoinItemViewModel(
-                rankedCoinList = top3RankedCoins
+        if (coinInfoResponses.size > 3) {
+            val topRankingItemViewModel = listOf(
+                ItemViewModel.TopRankingCoinItemViewModel(
+                    rankedCoinList = coinInfoResponses.subList(0, 3)
+                )
             )
-        )
 
-        val coinItemViewModel = coinInfoResponses.map {
-            ItemViewModel.CoinItemViewModel(
-                coinInfo = it
+            val remainedCoinResponse = coinInfoResponses.subList(3, coinInfoResponses.size)
+
+            val coinItemViewModel = remainedCoinResponse.map {
+                ItemViewModel.CoinItemViewModel(
+                    coinInfo = it
+                )
+            }
+
+            return topRankingItemViewModel + coinItemViewModel
+
+        } else {
+            return listOf(
+                ItemViewModel.TopRankingCoinItemViewModel(
+                    rankedCoinList = coinInfoResponses
+                )
             )
         }
-
-        return topRankingItemViewModel + coinItemViewModel
     }
 
 
@@ -96,19 +102,4 @@ class MainActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         binding.rvSearchResult.adapter = CoinListAdapter()
     }
-
-
-//    private fun loadImage() {
-//        val image = findViewById<ImageView>(R.id.img)
-//        image.load("https://cdn.coinranking.com/mgHqwlCLj/usdt.svg") {
-//            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
-//        }
-//
-//        getImageLoader(this).enqueue(
-//            ImageRequest.Builder(this)
-//                .data("https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg")
-//                .target(image)
-//                .build()
-//        )
-//    }
 }

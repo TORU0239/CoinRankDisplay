@@ -5,10 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import coil.request.ImageRequest
 import kr.toru.lmwnassignment.data.response.CoinInfoResponse
 import kr.toru.lmwnassignment.databinding.CoinListItemBinding
 import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
+import kr.toru.lmwnassignment.util.imageloading.getImageLoader
 
 class CoinListAdapter(
     private var listItem: List<ItemViewModel> = listOf()
@@ -73,12 +78,46 @@ sealed class ItemViewModel {
 
 class TopRankCoinItemViewHolder(private val binding: CoinTopRankListItemBinding)
     : ItemViewHolder(binding) {
-    override fun bind(model: ItemViewModel) {}
+    override fun bind(model: ItemViewModel) {
+        model as ItemViewModel.TopRankingCoinItemViewModel
+        binding.coinTopRankItems.txtCoinSymbol1.text = model.rankedCoinList[0].symbol
+        binding.coinTopRankItems.txtCoinSymbol2.text = model.rankedCoinList[1].symbol
+        binding.coinTopRankItems.txtCoinSymbol3.text = model.rankedCoinList[2].symbol
+
+        binding.coinTopRankItems.imgBitCoin1.load(model.rankedCoinList[0].iconUrl) {
+            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
+        }
+
+        binding.coinTopRankItems.imgBitCoin2.load(model.rankedCoinList[1].iconUrl) {
+            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
+        }
+
+        binding.coinTopRankItems.imgBitCoin3.load(model.rankedCoinList[2].iconUrl) {
+            decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
+        }
+    }
 }
 
 class CoinListItemViewHolder(private val binding: CoinListItemBinding)
     : ItemViewHolder(binding) {
-    override fun bind(model: ItemViewModel) {}
+    override fun bind(model: ItemViewModel) {
+        model as ItemViewModel.CoinItemViewModel
+        binding.tvCoinName.text = model.coinInfo.name
+        binding.tvCoinSymbol.text = model.coinInfo.symbol
+
+        val imageLoader = ImageLoader.Builder(binding.root.context)
+            .components {
+                add(SvgDecoder.Factory())
+            }
+            .build()
+
+        imageLoader.enqueue(
+            ImageRequest.Builder(binding.root.context)
+                .data(model.coinInfo.iconUrl)
+                .target(binding.imgCoin)
+                .build()
+        )
+    }
 }
 
 class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBinding)
