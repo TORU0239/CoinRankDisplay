@@ -1,6 +1,8 @@
 package kr.toru.lmwnassignment.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -38,6 +40,15 @@ class MainActivity : AppCompatActivity() {
         initRecyclerView()
         initEventObserver()
         loadCoinList()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.e("Toru", "onConfigurationChanged: ${newConfig.orientation}")
+
+        lifecycleScope.launch {
+            viewModel.resetCoinCall()
+        }
     }
 
     private fun initWindowInset() {

@@ -1,5 +1,6 @@
 package kr.toru.lmwnassignment.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,10 @@ class MainViewModel @Inject constructor(
                     Event.Failure(
                         listOf(
                             ItemViewModel.LoadFailureItemViewModel {
-                                viewModelScope.launch {
+//                                viewModelScope.launch {
+//                                    getCoins()
+//                                }
+                                callApi {
                                     getCoins()
                                 }
                             }
@@ -47,6 +51,20 @@ class MainViewModel @Inject constructor(
 
     private suspend fun Event.emitEvent() {
         _outputEventFlow.emit(this)
+    }
+
+    suspend fun resetCoinCall() {
+        Log.e("Toru", "resetCoinCall")
+        offset = 0
+        callApi {
+            getCoins()
+        }
+    }
+
+    private fun callApi(f: suspend () -> Unit) {
+        viewModelScope.launch {
+            f.invoke()
+        }
     }
 
 
@@ -62,5 +80,10 @@ class MainViewModel @Inject constructor(
         data class Failure(
             val data: List<ItemViewModel.LoadFailureItemViewModel>
         ): Event
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.e("Toru", "MainViewModel cleared!!")
     }
 }
