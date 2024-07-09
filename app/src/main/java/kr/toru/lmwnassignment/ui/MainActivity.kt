@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.toru.lmwnassignment.R
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var currentEvent: MainViewModel.Event? = null
+
     private fun initEventObserver() {
         lifecycleScope.launch {
             viewModel.outputEventFlow.collect { result ->
@@ -54,11 +58,11 @@ class MainActivity : AppCompatActivity() {
                         (binding.rvSearchResult.adapter as CoinListAdapter).setData(convertResponse(result.data))
                     }
                     is MainViewModel.Event.Failure -> {
-                        // TODO: showing error message
                         (binding.rvSearchResult.adapter as CoinListAdapter).setData(result.data)
                     }
 
                     is MainViewModel.Event.Loading -> {
+                        currentEvent = result
                         binding.progressBar.visibility = if (result.isLoading) View.VISIBLE else View.GONE
                     }
                 }
@@ -123,6 +127,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        binding.rvSearchResult.adapter = CoinListAdapter()
+        binding.rvSearchResult.run {
+            adapter = CoinListAdapter()
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val visibleItemCount = (layoutManager as LinearLayoutManager).childCount
+                    val totalItemCount = (layoutManager as LinearLayoutManager).itemCount
+                    val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    val isLoading = if (currentEvent is MainViewModel.Event.Loading) (currentEvent as MainViewModel.Event.Loading).isLoading else false
+                    if (!isLoading && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
+                        Log.e("Toru", "pagination")
+                        // TODO: changing to not show top 3 ranking
+                        loadCoinList()
+                    }
+                }
+            })
+        }
     }
 }
