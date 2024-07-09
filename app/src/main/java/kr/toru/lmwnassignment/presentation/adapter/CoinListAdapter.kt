@@ -151,13 +151,13 @@ class TopRankCoinItemViewHolder(private val binding: CoinTopRankListItemBinding)
         binding.coinTopRankItems.txtCoinName2.text = model.rankedCoinList[1].name
         binding.coinTopRankItems.txtCoinName.text = model.rankedCoinList[2].name
 
-        binding.coinTopRankItems.tvCoinPriceTrend1.text = model.rankedCoinList[0].change.toDouble().absoluteValue.toString()
-        binding.coinTopRankItems.tvCoinPriceTrend2.text = model.rankedCoinList[1].change.toDouble().absoluteValue.toString()
-        binding.coinTopRankItems.tvCoinPriceTrend.text = model.rankedCoinList[2].change.toDouble().absoluteValue.toString()
+        binding.coinTopRankItems.tvCoinPriceTrend1.text = model.rankedCoinList[0].change?.toDouble()?.absoluteValue.toString()
+        binding.coinTopRankItems.tvCoinPriceTrend2.text = model.rankedCoinList[1].change?.toDouble()?.absoluteValue.toString()
+        binding.coinTopRankItems.tvCoinPriceTrend.text = model.rankedCoinList[2].change?.toDouble()?.absoluteValue.toString()
 
 
         for (i in 0 until 3) {
-            val (textColor, image) = model.rankedCoinList[i].change.toPriceTrendColor()
+            val (textColor, image) = model.rankedCoinList[i].change?.toPriceTrendColor() ?: Pair(R.color.coinPriceUpColor, R.drawable.up_arrow)
             val textView = when(i) {
                 0 -> binding.coinTopRankItems.tvCoinPriceTrend1
                 1 -> binding.coinTopRankItems.tvCoinPriceTrend2
@@ -190,9 +190,9 @@ class CoinListItemViewHolder(private val binding: CoinListItemBinding)
             binding.tvCoinName.text = name
             binding.tvCoinSymbol.text = symbol
             binding.tvCoinPrice.text = price
-            binding.tvCoinPriceTrend.text = change.toDouble().absoluteValue.toString()
+            binding.tvCoinPriceTrend.text = change?.toDouble()?.absoluteValue.toString()
 
-            val (textColor, image) = change.toPriceTrendColor()
+            val (textColor, image) = change?.toPriceTrendColor() ?: Pair(R.color.coinPriceUpColor, R.drawable.up_arrow)
 
             binding.tvCoinPriceTrend.setTextColor(
                 ContextCompat.getColor(binding.root.context, textColor)

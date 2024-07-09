@@ -18,14 +18,17 @@ class MainViewModel @Inject constructor(
     private val _outputEventFlow = MutableSharedFlow<Event>()
     val outputEventFlow = _outputEventFlow
 
+    // offset
+    private var offset = 0
+
     suspend fun getCoins() {
         viewModelScope.launch {
             Event.Loading().emitEvent()
-            getCoinsUseCase.getCoins()
+            getCoinsUseCase.getCoins(offset = offset)
                 .onSuccess {
+                    offset += it.data.coins.size
                     Event.Success(data = it.data.coins).emitEvent()
                     Event.Loading(isLoading = false).emitEvent()
-
                 }
                 .onFailure {
                     Event.Loading(isLoading = false).emitEvent()

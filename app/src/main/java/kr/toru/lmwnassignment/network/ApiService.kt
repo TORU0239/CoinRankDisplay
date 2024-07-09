@@ -33,9 +33,14 @@ class ApiService(private val httpClient: HttpClient) {
         }
     }
 
-    suspend fun getCoins() = apiCall(
+    suspend fun getCoins(
+        offset: Int = 0
+    ) = apiCall(
         urlString = BASE_URL + COINS_API,
-        parameterMap = mapOf("limit" to "20")
+        parameterMap = mapOf(
+            "limit" to "20",
+            "offset" to "$offset"
+        )
     )
 
     suspend fun getCoinDetail(coinUUID: String) = apiCall("$BASE_URL$COIN_API/$coinUUID")

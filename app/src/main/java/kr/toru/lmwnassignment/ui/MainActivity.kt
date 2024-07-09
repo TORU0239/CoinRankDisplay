@@ -19,6 +19,7 @@ import kr.toru.lmwnassignment.databinding.ActivityMainBinding
 import kr.toru.lmwnassignment.presentation.adapter.CoinListAdapter
 import kr.toru.lmwnassignment.presentation.adapter.ItemViewModel
 import kr.toru.lmwnassignment.vm.MainViewModel
+import okhttp3.internal.filterList
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -73,43 +74,58 @@ class MainActivity : AppCompatActivity() {
     // temporary item transformer
     private fun convertResponse(coinInfoResponses: List<CoinInfoResponse>): List<ItemViewModel> {
         if (coinInfoResponses.size > 3) {
-            val topRankingItemViewModel = listOf(
-                ItemViewModel.TopRankingCoinItemViewModel(
-                    rankedCoinList = coinInfoResponses.subList(0, 3)
-                )
-            )
 
-            val textSectionItemViewModel = listOf(
-                ItemViewModel.TextSectionItemViewModel(
-                    title = "Buy,sell, and hold crypto"
-                )
-            )
-
-            val remainedCoinResponse = coinInfoResponses.subList(3, coinInfoResponses.size)
-
-            val coinItemViewModel = remainedCoinResponse.map {
-                ItemViewModel.CoinItemViewModel(
-                    coinInfo = it
-                )
+            val first3RankedItems = coinInfoResponses.filterList {
+                rank <= 3
             }
-            val mutableList = mutableListOf<ItemViewModel>()
-            mutableList.addAll(0, coinItemViewModel)
 
-            var neededIndex = 5
-            for (i in 0 until mutableList.size) {
-                if (neededIndex < mutableList.size) {
-                    mutableList.add(
-                        neededIndex - 1,
-                        ItemViewModel.InviteFriendItemViewModel(
-                            clickListener = {}
-                        )
+            if (first3RankedItems.isEmpty()) {
+                // paged item
+                return coinInfoResponses.map {
+                    ItemViewModel.CoinItemViewModel(
+                        coinInfo = it
                     )
-                    neededIndex *= 2
                 }
+            } else {
+                // top 3 ranking
+                val topRankingItemViewModel = listOf(
+                    ItemViewModel.TopRankingCoinItemViewModel(
+//                        rankedCoinList = coinInfoResponses.subList(0, 3)
+                        rankedCoinList = first3RankedItems
+                    )
+                )
+
+                val textSectionItemViewModel = listOf(
+                    ItemViewModel.TextSectionItemViewModel(
+                        title = "Buy, sell, and hold crypto"
+                    )
+                )
+
+                val remainedCoinResponse = coinInfoResponses.subList(3, coinInfoResponses.size)
+
+                val coinItemViewModel = remainedCoinResponse.map {
+                    ItemViewModel.CoinItemViewModel(
+                        coinInfo = it
+                    )
+                }
+                val mutableList = mutableListOf<ItemViewModel>()
+                mutableList.addAll(0, coinItemViewModel)
+
+                var neededIndex = 5
+                for (i in 0 until mutableList.size) {
+                    if (neededIndex < mutableList.size) {
+                        mutableList.add(
+                            neededIndex - 1,
+                            ItemViewModel.InviteFriendItemViewModel(
+                                clickListener = {}
+                            )
+                        )
+                        neededIndex *= 2
+                    }
+                }
+
+                return topRankingItemViewModel + textSectionItemViewModel + mutableList
             }
-
-            return topRankingItemViewModel + textSectionItemViewModel + mutableList
-
         } else {
             return listOf(
                 ItemViewModel.TopRankingCoinItemViewModel(
@@ -138,8 +154,6 @@ class MainActivity : AppCompatActivity() {
                     val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     val isLoading = if (currentEvent is MainViewModel.Event.Loading) (currentEvent as MainViewModel.Event.Loading).isLoading else false
                     if (!isLoading && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
-                        Log.e("Toru", "pagination")
-                        // TODO: changing to not show top 3 ranking
                         loadCoinList()
                     }
                 }
