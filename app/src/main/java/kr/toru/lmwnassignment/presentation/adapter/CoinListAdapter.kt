@@ -9,11 +9,13 @@ import androidx.viewbinding.ViewBinding
 import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import io.ktor.util.reflect.instanceOf
 import kr.toru.lmwnassignment.R
 import kr.toru.lmwnassignment.data.response.CoinInfoResponse
 import kr.toru.lmwnassignment.databinding.CoinListItemBinding
 import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
+import kr.toru.lmwnassignment.databinding.LoadFailureListItemBinding
 import kr.toru.lmwnassignment.databinding.TextListItemBinding
 import kotlin.math.absoluteValue
 
@@ -40,9 +42,14 @@ class CoinListAdapter(
                 )
             }
 
-            else -> {
+            3 -> {
                 InviteFriendItemViewHolder(
                     InviteFriendListItemBinding.inflate(inflater, parent, false)
+                )
+            }
+            else -> {
+                LoadFailureItemViewHolder(
+                    LoadFailureListItemBinding.inflate(inflater, parent, false)
                 )
             }
         }
@@ -60,13 +67,24 @@ class CoinListAdapter(
             is ItemViewModel.CoinItemViewModel -> 1
             is ItemViewModel.TextSectionItemViewModel -> 2
             is ItemViewModel.InviteFriendItemViewModel -> 3
+            is ItemViewModel.LoadFailureItemViewModel -> 4
         }
     }
 
     fun setData(newItemList: List<ItemViewModel>) {
+        clearPreviousLoadingData()
         val startPosition = listItem.size
         listItem += newItemList
         notifyItemRangeInserted(startPosition, newItemList.size)
+    }
+
+    private fun clearPreviousLoadingData() {
+        if (listItem.size == 1) {
+            if (listItem[0] is ItemViewModel.LoadFailureItemViewModel) {
+                listItem = emptyList()
+                notifyItemChanged(0)
+            }
+        }
     }
 }
 
@@ -85,6 +103,10 @@ sealed class ItemViewModel {
 
     data class TextSectionItemViewModel(
         val title: String
+    ): ItemViewModel()
+
+    data class LoadFailureItemViewModel(
+        val onClickListener: (()->Unit)? = null
     ): ItemViewModel()
 }
 
@@ -203,6 +225,15 @@ class TextSectionItemViewHolder(private val binding: TextListItemBinding): ItemV
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.TextSectionItemViewModel
         binding.txtTitle.text = model.title
+    }
+}
+
+class LoadFailureItemViewHolder(private val binding: LoadFailureListItemBinding): ItemViewHolder(binding) {
+    override fun bind(model: ItemViewModel) {
+        model as ItemViewModel.LoadFailureItemViewModel
+        binding.txtTryAgain.setOnClickListener {
+            model.onClickListener?.invoke()
+        }
     }
 }
 

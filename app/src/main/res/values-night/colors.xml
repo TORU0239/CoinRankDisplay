@@ -25,4 +25,7 @@
     <color name="inviteFriendBgColor">#F9F9F9</color>
 
     <color name="progressBarColor">#38A0FF</color>
+
+    <color name="loadFailureTextColor">#FFFFFF</color>
+    <color name="loadTryAgainTextColor">#38A0FF</color>
 </resources>

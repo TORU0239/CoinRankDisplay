@@ -54,8 +54,8 @@ class MainActivity : AppCompatActivity() {
                         (binding.rvSearchResult.adapter as CoinListAdapter).setData(convertResponse(result.data))
                     }
                     is MainViewModel.Event.Failure -> {
-                        Log.e("Toru", "Failure")
                         // TODO: showing error message
+                        (binding.rvSearchResult.adapter as CoinListAdapter).setData(result.data)
                     }
 
                     is MainViewModel.Event.Loading -> {

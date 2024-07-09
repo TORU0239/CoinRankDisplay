@@ -1,6 +1,5 @@
 package kr.toru.lmwnassignment.vm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,6 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kr.toru.lmwnassignment.data.response.CoinInfoResponse
 import kr.toru.lmwnassignment.data.usecase.GetCoinsUseCase
+import kr.toru.lmwnassignment.presentation.adapter.ItemViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,8 +19,8 @@ class MainViewModel @Inject constructor(
     val outputEventFlow = _outputEventFlow
 
     suspend fun getCoins() {
-        Event.Loading().emitEvent()
         viewModelScope.launch {
+            Event.Loading().emitEvent()
             getCoinsUseCase.getCoins()
                 .onSuccess {
                     Event.Success(data = it.data.coins).emitEvent()
@@ -28,8 +28,16 @@ class MainViewModel @Inject constructor(
 
                 }
                 .onFailure {
-                    Event.Failure.emitEvent()
                     Event.Loading(isLoading = false).emitEvent()
+                    Event.Failure(
+                        listOf(
+                            ItemViewModel.LoadFailureItemViewModel {
+                                viewModelScope.launch {
+                                    getCoins()
+                                }
+                            }
+                        )
+                    ).emitEvent()
                 }
         }
     }
@@ -48,6 +56,8 @@ class MainViewModel @Inject constructor(
             val data: List<CoinInfoResponse>
         ): Event
 
-        data object Failure: Event
+        data class Failure(
+            val data: List<ItemViewModel.LoadFailureItemViewModel>
+        ): Event
     }
 }
