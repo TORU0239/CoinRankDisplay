@@ -27,7 +27,7 @@ data class CoinInfoResponse(
     val tier: Int,
     val change: String,
     val rank: Int,
-    val sparkline: List<String>,
+    val sparkline: List<String?>? = listOf(),
     val lowVolume: Boolean,
     val coinrankingUrl: String,
     @SerialName("24hVolume")

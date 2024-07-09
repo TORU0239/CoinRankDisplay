@@ -81,6 +81,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/imgCoin"
             tools:text="1.07"/>
+
+        <ImageView
+            android:id="@+id/imgCoinPriceTrend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="10dp"
+            android:minHeight="10dp"
+            android:contentDescription="@null"
+            android:src="@drawable/down_arrow"
+            app:layout_constraintTop_toTopOf="@id/tvCoinPriceTrend"
+            app:layout_constraintEnd_toStartOf="@id/tvCoinPriceTrend"
+            app:layout_constraintBottom_toBottomOf="@id/tvCoinPriceTrend"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

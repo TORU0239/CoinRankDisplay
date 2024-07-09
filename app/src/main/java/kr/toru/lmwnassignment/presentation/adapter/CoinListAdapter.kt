@@ -9,11 +9,11 @@ import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.load
 import coil.request.ImageRequest
+import kr.toru.lmwnassignment.R
 import kr.toru.lmwnassignment.data.response.CoinInfoResponse
 import kr.toru.lmwnassignment.databinding.CoinListItemBinding
 import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
-import kr.toru.lmwnassignment.util.imageloading.getImageLoader
 
 class CoinListAdapter(
     private var listItem: List<ItemViewModel> = listOf()
@@ -100,25 +100,42 @@ class TopRankCoinItemViewHolder(private val binding: CoinTopRankListItemBinding)
 
 class CoinListItemViewHolder(private val binding: CoinListItemBinding)
     : ItemViewHolder(binding) {
+
+    private val imageLoader = ImageLoader.Builder(binding.root.context)
+        .components {
+            add(SvgDecoder.Factory())
+        }
+        .build()
+
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.CoinItemViewModel
-        binding.tvCoinName.text = model.coinInfo.name
-        binding.tvCoinSymbol.text = model.coinInfo.symbol
 
-        val imageLoader = ImageLoader.Builder(binding.root.context)
-            .components {
-                add(SvgDecoder.Factory())
+        with(model.coinInfo) {
+            binding.tvCoinName.text = name
+            binding.tvCoinSymbol.text = symbol
+            binding.tvCoinPrice.text = price
+            binding.tvCoinPriceTrend.text = change
+            change.toPriceTrendColor().run {
+                binding.tvCoinPriceTrend.setTextColor(first)
+                binding.imgCoinPriceTrend.setImageResource(second)
             }
-            .build()
 
-        imageLoader.enqueue(
-            ImageRequest.Builder(binding.root.context)
-                .data(model.coinInfo.iconUrl)
-                .target(binding.imgCoin)
-                .build()
-        )
+            imageLoader.enqueue(
+                ImageRequest.Builder(binding.root.context)
+                    .data(iconUrl)
+                    .target(binding.imgCoin)
+                    .build()
+            )
+        }
     }
 }
+
+
+private fun String.toPriceTrendColor() =
+    when {
+        this.startsWith("-") -> Pair(R.color.coinPriceDownColor, R.drawable.down_arrow)
+        else -> Pair(R.color.coinPriceUpColor, R.drawable.up_arrow)
+    }
 
 class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBinding)
     : ItemViewHolder(binding) {
