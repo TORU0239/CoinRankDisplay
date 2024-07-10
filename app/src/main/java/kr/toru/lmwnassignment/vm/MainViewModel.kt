@@ -22,9 +22,15 @@ class MainViewModel @Inject constructor(
     // offset
     private var offset = 0
 
-    suspend fun getCoins() {
+    suspend fun getCoins(isRefreshing: Boolean = false) {
         viewModelScope.launch {
             Event.Loading().emitEvent()
+            if (isRefreshing) {
+                offset = 0
+            }
+            else {
+                offset += 20
+            }
             getCoinsUseCase.getCoins(offset = offset)
                 .onSuccess {
                     offset += it.data.coins.size
@@ -36,9 +42,6 @@ class MainViewModel @Inject constructor(
                     Event.Failure(
                         listOf(
                             ItemViewModel.LoadFailureItemViewModel {
-//                                viewModelScope.launch {
-//                                    getCoins()
-//                                }
                                 callApi {
                                     getCoins()
                                 }

@@ -9,7 +9,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         initWindowInset()
         initRecyclerView()
         initEventObserver()
-        loadCoinList()
+        loadCoinList(true)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -63,18 +65,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun initEventObserver() {
         lifecycleScope.launch {
-            viewModel.outputEventFlow.collect { result ->
-                when(result) {
-                    is MainViewModel.Event.Success -> {
-                        (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(convertResponse(result.data))
-                    }
-                    is MainViewModel.Event.Failure -> {
-                        (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(result.data)
-                    }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.outputEventFlow.collect { result ->
+                    when(result) {
+                        is MainViewModel.Event.Success -> {
+                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(convertResponse(result.data))
+                        }
+                        is MainViewModel.Event.Failure -> {
+                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(result.data)
+                        }
 
-                    is MainViewModel.Event.Loading -> {
-                        currentEvent = result
-                        binding.progressBar.visibility = if (result.isLoading) View.VISIBLE else View.GONE
+                        is MainViewModel.Event.Loading -> {
+                            currentEvent = result
+                            binding.progressBar.visibility = if (result.isLoading) View.VISIBLE else View.GONE
+                        }
                     }
                 }
             }
@@ -145,9 +149,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun loadCoinList() {
+    private fun loadCoinList(isRefreshing: Boolean = false) {
         lifecycleScope.launch {
-            viewModel.getCoins()
+            viewModel.getCoins(isRefreshing = isRefreshing)
         }
     }
 
@@ -163,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                     val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     val isLoading = if (currentEvent is MainViewModel.Event.Loading) (currentEvent as MainViewModel.Event.Loading).isLoading else false
                     if (!isLoading && visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
-                        loadCoinList()
+                        loadCoinList(false)
                     }
                 }
             })
