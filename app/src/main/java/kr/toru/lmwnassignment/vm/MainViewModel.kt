@@ -28,17 +28,21 @@ class MainViewModel @Inject constructor(
             if (isRefreshing) {
                 offset = 0
             }
-            else {
-                offset += 20
-            }
+
             getCoinsUseCase.getCoins(offset = offset)
                 .onSuccess {
-                    offset += it.data.coins.size
-                    Event.Success(data = it.data.coins).emitEvent()
+                    Event.Success(
+                        data = it.data.coins,
+                        currentOffset = offset
+                    ).emitEvent()
+
                     Event.Loading(isLoading = false).emitEvent()
+
+                    offset += it.data.coins.size
                 }
                 .onFailure {
                     Event.Loading(isLoading = false).emitEvent()
+                    Log.e("Toru", "offset: $offset")
                     Event.Failure(
                         listOf(
                             ItemViewModel.LoadFailureItemViewModel {
@@ -46,7 +50,8 @@ class MainViewModel @Inject constructor(
                                     getCoins()
                                 }
                             }
-                        )
+                        ),
+                        currentOffset = offset
                     ).emitEvent()
                 }
         }
@@ -77,11 +82,13 @@ class MainViewModel @Inject constructor(
         ) : Event
 
         data class Success(
-            val data: List<CoinInfoResponse>
+            val data: List<CoinInfoResponse>,
+            val currentOffset: Int = 0
         ): Event
 
         data class Failure(
-            val data: List<ItemViewModel.LoadFailureItemViewModel>
+            val data: List<ItemViewModel.LoadFailureItemViewModel>,
+            val currentOffset: Int = 0
         ): Event
     }
 

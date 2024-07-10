@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         initWindowInset()
         initRecyclerView()
+        initSwipeRefreshLayout()
         initEventObserver()
         loadCoinList(true)
     }
@@ -69,10 +70,18 @@ class MainActivity : AppCompatActivity() {
                 viewModel.outputEventFlow.collect { result ->
                     when(result) {
                         is MainViewModel.Event.Success -> {
-                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(convertResponse(result.data))
+                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(
+                                newItemList = convertResponse(result.data),
+                                currentOffset = result.currentOffset
+                            )
+                            binding.swipeRefreshLayout.isRefreshing = false
                         }
                         is MainViewModel.Event.Failure -> {
-                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(result.data)
+                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(
+                                newItemList = result.data,
+                                currentOffset = result.currentOffset
+                            )
+                            binding.swipeRefreshLayout.isRefreshing = false
                         }
 
                         is MainViewModel.Event.Loading -> {
@@ -152,6 +161,14 @@ class MainActivity : AppCompatActivity() {
     private fun loadCoinList(isRefreshing: Boolean = false) {
         lifecycleScope.launch {
             viewModel.getCoins(isRefreshing = isRefreshing)
+        }
+    }
+
+    private fun initSwipeRefreshLayout() {
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.progressBarColor)
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = true
+            loadCoinList(true)
         }
     }
 

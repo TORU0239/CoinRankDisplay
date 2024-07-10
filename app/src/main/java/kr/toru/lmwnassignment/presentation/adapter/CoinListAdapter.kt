@@ -72,10 +72,18 @@ class CoinListAdapter(
         }
     }
 
-    fun addNewData(newItemList: List<ItemViewModel>) {
+    fun addNewData(
+        newItemList: List<ItemViewModel>,
+        currentOffset: Int = 0,
+    ) {
         clearPreviousLoadingData()
-        val startPosition = listItem.size
-        listItem += newItemList
+        val startPosition = if (currentOffset == 0) 0 else listItem.size
+        if (currentOffset == 0) {
+            listItem = newItemList
+        } else {
+            listItem += newItemList
+        }
+
         notifyItemRangeInserted(startPosition, newItemList.size)
     }
 
