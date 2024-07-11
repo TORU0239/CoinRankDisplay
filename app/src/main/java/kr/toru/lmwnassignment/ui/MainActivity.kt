@@ -141,26 +141,29 @@ class MainActivity : AppCompatActivity() {
                         }
                     )
                 }
-                val mutableList = mutableListOf<ItemViewModel>()
-                mutableList.addAll(0, coinItemViewModel)
 
-                var neededIndex = 5
-                for (i in 0 until mutableList.size) {
-                    if (neededIndex < mutableList.size) {
-                        mutableList.add(
-                            neededIndex - 1,
-                            ItemViewModel.InviteFriendItemViewModel(
-                                clickListener = {
-                                    startActivity(
-                                        Intent(Intent.ACTION_VIEW, "https://careers.lmwn.com".toUri())
-                                    )
-                                }
-                            )
-                        )
-                        neededIndex *= 2
-                    }
-                }
-                return topRankingItemViewModel + textSectionItemViewModel + mutableList
+                // REMOVED INVITATION FRIEND ITEM TEMPORARILY
+//                val mutableList = mutableListOf<ItemViewModel>()
+//                mutableList.addAll(0, coinItemViewModel)
+//
+//                var neededIndex = 5
+//                for (i in 0 until mutableList.size) {
+//                    if (neededIndex < mutableList.size) {
+//                        mutableList.add(
+//                            neededIndex - 1,
+//                            ItemViewModel.InviteFriendItemViewModel(
+//                                clickListener = {
+//                                    startActivity(
+//                                        Intent(Intent.ACTION_VIEW, "https://careers.lmwn.com".toUri())
+//                                    )
+//                                }
+//                            )
+//                        )
+//                        neededIndex *= 2
+//                    }
+//                }
+//                return topRankingItemViewModel + textSectionItemViewModel + mutableList
+                return topRankingItemViewModel + textSectionItemViewModel + coinItemViewModel
             }
         } else {
             return listOf(
