@@ -29,4 +29,13 @@
 
     <color name="loadFailureTextColor">#333333</color>
     <color name="loadTryAgainTextColor">#38A0FF</color>
+
+    <color name="coinDetailName">#F7931A</color>
+    <color name="coinDetailSymbolName">#000000</color>
+
+    <color name="coinDetailDescrptiion">#999999</color>
+    <color name="coinDetailSeparatorColor">#EEEEEE</color>
+
+    <color name="goToWebsiteBtnColor">#38A0FF</color>
+
 </resources>

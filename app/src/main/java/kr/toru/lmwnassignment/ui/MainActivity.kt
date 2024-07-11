@@ -1,5 +1,6 @@
 package kr.toru.lmwnassignment.ui
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -113,13 +114,16 @@ class MainActivity : AppCompatActivity() {
                 // top 3 ranking
                 val topRankingItemViewModel = listOf(
                     ItemViewModel.TopRankingCoinItemViewModel(
-                        rankedCoinList = first3RankedItems
+                        rankedCoinList = first3RankedItems,
+                        clickListener = {
+                            showDetailBottomSheet()
+                        }
                     )
                 )
 
                 val textSectionItemViewModel = listOf(
                     ItemViewModel.TextSectionItemViewModel(
-                        title = "Buy, sell, and hold crypto"
+                        title = getString(R.string.coin_rank_label)
                     )
                 )
 
@@ -127,7 +131,10 @@ class MainActivity : AppCompatActivity() {
 
                 val coinItemViewModel = remainedCoinResponse.map {
                     ItemViewModel.CoinItemViewModel(
-                        coinInfo = it
+                        coinInfo = it,
+                        clickListener = {
+                            showDetailBottomSheet()
+                        }
                     )
                 }
                 val mutableList = mutableListOf<ItemViewModel>()
@@ -189,5 +196,10 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun showDetailBottomSheet(itemId: Int = -1) {
+        val detailBottomSheet = DetailBottomSheetFragment.newInstance(itemId)
+        detailBottomSheet.show(supportFragmentManager, "DetailBottomSheet")
     }
 }

@@ -97,15 +97,17 @@ class CoinListAdapter(
 
 sealed class ItemViewModel {
     data class TopRankingCoinItemViewModel(
-        val rankedCoinList: List<CoinInfoResponse>
+        val rankedCoinList: List<CoinInfoResponse>,
+        val clickListener: (() -> Unit)? = null
     ): ItemViewModel()
 
     data class CoinItemViewModel(
-        val coinInfo: CoinInfoResponse
+        val coinInfo: CoinInfoResponse,
+        val clickListener: (() -> Unit)? = null
     ): ItemViewModel()
 
     data class InviteFriendItemViewModel(
-        val clickListener: () -> Unit
+        val clickListener: (() -> Unit)? = null
     ): ItemViewModel()
 
     data class TextSectionItemViewModel(
@@ -129,6 +131,11 @@ class TopRankCoinItemViewHolder(private val binding: CoinTopRankListItemBinding)
 
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.TopRankingCoinItemViewModel
+
+        binding.root.setOnClickListener {
+            model.clickListener?.invoke()
+        }
+
         binding.coinTopRankItems.txtCoinSymbol1.text = model.rankedCoinList[0].symbol
         binding.coinTopRankItems.txtCoinSymbol2.text = model.rankedCoinList[1].symbol
         binding.coinTopRankItems.txtCoinSymbol3.text = model.rankedCoinList[2].symbol
@@ -192,6 +199,10 @@ class CoinListItemViewHolder(private val binding: CoinListItemBinding)
 
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.CoinItemViewModel
+
+        binding.root.setOnClickListener {
+            model.clickListener?.invoke()
+        }
 
         with(model.coinInfo) {
             binding.tvCoinName.text = name

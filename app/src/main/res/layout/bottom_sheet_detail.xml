@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="534dp"
+    android:orientation="vertical"
+    android:paddingTop="32dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline24dpBegin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="24dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline24dpEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="24dp" />
+
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:barrierAllowsGoneWidgets="false"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="txtCoinSymbolName" />
+
+
+    <ImageView
+        android:id="@+id/imgCoin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="@id/guideline24dpBegin"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtCoinName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/coinDetailName"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:maxLines="1"
+        android:maxEms="12"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/imgCoin"
+        app:layout_constraintTop_toTopOf="@id/imgCoin"
+        tools:text="abracadabra abracadabra abracadabra abracadabra"/>
+
+    <TextView
+        android:id="@+id/txtCoinSymbolName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/coinDetailSymbolName"
+        android:textSize="14sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/txtCoinName"
+        app:layout_constraintTop_toTopOf="@id/txtCoinName"
+        app:layout_constraintBottom_toBottomOf="@id/txtCoinName"
+        app:layout_constraintEnd_toEndOf="@id/guideline24dpEnd"
+        tools:text="(BTC)"/>
+
+    <!-- 2nd row -->
+    <TextView
+        android:id="@+id/txtCoinPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/coinDetailSymbolName"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/imgCoin"
+        app:layout_constraintTop_toBottomOf="@id/txtCoinName"
+        tools:text="PRICE"/>
+
+    <TextView
+        android:id="@+id/txtCoinPriceAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/coinDetailSymbolName"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/txtCoinPrice"
+        app:layout_constraintTop_toTopOf="@id/txtCoinPrice"
+        app:layout_constraintBottom_toBottomOf="@id/txtCoinPrice"
+        tools:text="$ 56,514.22"/>
+
+    <!-- 3rd row -->
+    <TextView
+        android:id="@+id/txtCoinMarketCap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/coinDetailSymbolName"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/imgCoin"
+        app:layout_constraintTop_toBottomOf="@id/txtCoinPrice"
+        tools:text="MARKET CAP"/>
+
+    <TextView
+        android:id="@+id/txtCoinMarketCapAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/coinDetailSymbolName"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/txtCoinMarketCap"
+        app:layout_constraintTop_toTopOf="@id/txtCoinMarketCap"
+        app:layout_constraintBottom_toBottomOf="@id/txtCoinMarketCap"
+        tools:text="$ 1.07 trillion"/>
+
+    <TextView
+        android:id="@+id/txtCoinDescription"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:textSize="14sp"
+        android:textColor="@color/coinDetailDescrptiion"
+        android:includeFontPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/txtCoinMarketCap"
+        app:layout_constraintBottom_toTopOf="@id/separator"
+        app:layout_constraintStart_toStartOf="@id/guideline24dpBegin"
+        app:layout_constraintEnd_toEndOf="@id/guideline24dpEnd"
+        tools:text="Bitcoin is the first digital currency that allows users to send and receive money, without the interference of a central bank or government. Instead, a network of thousands of peers is controlling the transactions; a decentralized system Why does bitcoin have Bitcoin is the first digital currency that allows users to send and receive money, without the interference of a central bank or government. Instead, a network of thousands of peers is controlling the transactions; a decentralized system Why does bitcoin have Bitcoin is the first digital currency that allows users to send and receive money, without the interference of a central bank or government. Instead, a network of thousands of peers is controlling the transactions; a decentralized system Why does bitcoin have Bitcoin is the first digital currency that allows users to send and receive money, without the interference of a central bank or government. Instead, a network of thousands of peers is controlling the transactions; a decentralized system Why does bitcoin have Bitcoin is the first digital currency that allows users to send and receive money, without the interference of a central bank or government. Instead, a network of thousands of peers is controlling the transactions"/>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/coinDetailSeparatorColor"
+        app:layout_constraintBottom_toTopOf="@id/btnGoToWebsite"/>
+
+    <TextView
+        android:id="@+id/btnGoToWebsite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/goToWebsiteBtnColor"
+        android:textStyle="bold"
+        android:text="@string/go_to_website"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
