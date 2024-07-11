@@ -27,13 +27,17 @@ class DetailViewModel @Inject constructor(
             it.let { response ->
                 Event.Success(
                     data = DetailBottomSheetViewData(
-                        iconUrl = response.data.coin.iconUrl,
-                        coinSymbolName = response.data.coin.symbol,
-                        coinName = response.data.coin.name,
-                        coinDescription = response.data.coin.description,
-                        marketCap = formatNumber(response.data.coin.marketCap),
-                        price = getDecimalFormat(response.data.coin.price),
-                        websiteUrl = response.data.coin.websiteUrl
+                        iconUrl = response.data.coin.iconUrl ?: "",
+                        coinSymbolName = response.data.coin.symbol ?: "",
+                        coinName = response.data.coin.name ?: "",
+                        coinDescription = response.data.coin.description ?: "",
+                        marketCap = response.data.coin.marketCap?.let {
+                            formatNumber(it)
+                        } ?: "",
+                        price = response.data.coin.price?.let {
+                            getDecimalFormat(it)
+                        } ?: "",
+                        websiteUrl = response.data.coin.websiteUrl ?: ""
                     )
                 ).emitEvent()
 

@@ -17,41 +17,41 @@ data class CoinDetailWrapperResponse (
 @Serializable
 data class CoinDetailInfoResponse(
     @SerialName("24hVolume")
-    val volumeFor24h: String,
-    val allTimeHigh: AllTimeHigh,
-    val btcPrice: String,
-    val change: String,
-    val coinrankingUrl: String,
-    val color: String,
-    val contractAddresses: List<String>,
-    val description: String,
-    val fullyDilutedMarketCap: String,
-    val hasContent: Boolean,
-    val iconUrl: String,
-    val links: List<Link>,
-    val listedAt: Int,
-    val lowVolume: Boolean,
-    val marketCap: Long,
-    val name: String,
+    val volumeFor24h: String? = "",
+    val allTimeHigh: AllTimeHigh? = AllTimeHigh(),
+    val btcPrice: String? = "",
+    val change: String? = "",
+    val coinrankingUrl: String? = "",
+    val color: String? = "",
+    val contractAddresses: List<String?>? = listOf(),
+    val description: String? = "",
+    val fullyDilutedMarketCap: String? = "",
+    val hasContent: Boolean?,
+    val iconUrl: String? = "",
+    val links: List<Link?>? = listOf(),
+    val listedAt: Int? = 0,
+    val lowVolume: Boolean? = false,
+    val marketCap: Long? = 0L,
+    val name: String? = "",
     val notices: String? = "",
-    val numberOfExchanges: Int,
-    val numberOfMarkets: Int,
-    val price: Double,
-    val priceAt: Int,
-    val rank: Int,
+    val numberOfExchanges: Int? = -1,
+    val numberOfMarkets: Int? = -1,
+    val price: Double? = 0.0,
+    val priceAt: Int? = -1,
+    val rank: Int? = -1,
     val sparkline: (List<String?>)? = null,
-    val supply: Supply,
-    val symbol: String,
-    val tags: List<String>,
-    val tier: Int,
-    val uuid: String,
-    val websiteUrl: String
+    val supply: Supply? = Supply(),
+    val symbol: String? = "",
+    val tags: List<String?>? = listOf(),
+    val tier: Int? = -1,
+    val uuid: String? = "",
+    val websiteUrl: String? = ""
 )
 
 @Serializable
 data class AllTimeHigh(
-    val price: String,
-    val timestamp: Int
+    val price: String? = "",
+    val timestamp: Int? = 0
 )
 
 @Serializable
