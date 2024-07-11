@@ -30,6 +30,8 @@
     <color name="loadFailureTextColor">#FFFFFF</color>
     <color name="loadTryAgainTextColor">#38A0FF</color>
 
+    <color name="coinDetailBackground">#3C3C3C</color>
+
     <color name="coinDetailName">#F7931A</color>
     <color name="coinDetailSymbolName">#FFFFFF</color>
 

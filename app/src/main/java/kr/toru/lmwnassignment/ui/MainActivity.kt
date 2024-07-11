@@ -1,5 +1,6 @@
 package kr.toru.lmwnassignment.ui
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -94,7 +96,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // temporary item transformer
     private fun convertResponse(coinInfoResponses: List<CoinInfoResponse>): List<ItemViewModel> {
         if (coinInfoResponses.size > 3) {
 
@@ -106,7 +107,12 @@ class MainActivity : AppCompatActivity() {
                 // paged item
                 return coinInfoResponses.map {
                     ItemViewModel.CoinItemViewModel(
-                        coinInfo = it
+                        coinInfo = it,
+                        clickListener = {
+                            it.uuid ?.let { param ->
+                                showDetailBottomSheet(uuid = param)
+                            }
+                        }
                     )
                 }
             } else {
@@ -144,13 +150,16 @@ class MainActivity : AppCompatActivity() {
                         mutableList.add(
                             neededIndex - 1,
                             ItemViewModel.InviteFriendItemViewModel(
-                                clickListener = {}
+                                clickListener = {
+                                    startActivity(
+                                        Intent(Intent.ACTION_VIEW, "https://careers.lmwn.com".toUri())
+                                    )
+                                }
                             )
                         )
                         neededIndex *= 2
                     }
                 }
-
                 return topRankingItemViewModel + textSectionItemViewModel + mutableList
             }
         } else {

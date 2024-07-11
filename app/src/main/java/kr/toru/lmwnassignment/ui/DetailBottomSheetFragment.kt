@@ -1,15 +1,20 @@
 package kr.toru.lmwnassignment.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import coil.request.ImageRequest
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.toru.lmwnassignment.databinding.BottomSheetDetailBinding
+import kr.toru.lmwnassignment.util.imageloading.getImageLoader
 import kr.toru.lmwnassignment.vm.DetailViewModel
 
 @AndroidEntryPoint
@@ -54,14 +59,47 @@ class DetailBottomSheetFragment: BottomSheetDialogFragment() {
         lifecycleScope.launch {
             viewModel.eventFlow.collect { event ->
                 when (event) {
-                   is DetailViewModel.Event.Success -> {
-                       // TODO : binding data
+                    is DetailViewModel.Event.Success -> {
+                        bindData(event.data)
+                    }
 
-                   }
-                   else -> {
+                    is DetailViewModel.Event.Loading -> {
+                        binding.progressBarContainer.visibility = View.VISIBLE
+                    }
 
-                   }
+                    is DetailViewModel.Event.Loaded -> {
+                        binding.progressBarContainer.visibility = View.GONE
+                    }
+
+                    else -> {
+                        Toast.makeText(
+                            requireContext(), "Failed to load details", Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
+            }
+        }
+    }
+
+    private fun bindData(data: DetailViewModel.DetailBottomSheetViewData) {
+        binding.apply {
+            requireContext().getImageLoader().enqueue(
+                ImageRequest.Builder(root.context)
+                    .data(data.iconUrl)
+                    .target(imgCoin)
+                    .build()
+            )
+
+            binding.txtCoinDescription.text = data.coinDescription
+            binding.txtCoinName.text = data.coinName
+            binding.txtCoinSymbolName.text = data.coinSymbolName
+            binding.txtCoinPriceAmount.text = "$ ${data.price}"
+            binding.txtCoinMarketCapAmount.text = data.marketCap
+
+            binding.btnGoToWebsite.setOnClickListener {
+                requireActivity().startActivity(
+                    Intent(Intent.ACTION_VIEW, data.websiteUrl.toUri())
+                )
             }
         }
     }

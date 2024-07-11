@@ -18,6 +18,8 @@ import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
 import kr.toru.lmwnassignment.databinding.LoadFailureListItemBinding
 import kr.toru.lmwnassignment.databinding.TextListItemBinding
 import okhttp3.internal.filterList
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import kotlin.math.absoluteValue
 
 class CoinListAdapter(
@@ -197,6 +199,13 @@ class CoinListItemViewHolder(private val binding: CoinListItemBinding)
         }
         .build()
 
+    private fun getDecimalFormat(number: Double): String {
+        val decimalFormat = DecimalFormat("#,###.#####").apply {
+            roundingMode = RoundingMode.DOWN
+        }
+        return decimalFormat.format(number)
+    }
+
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.CoinItemViewModel
 
@@ -207,7 +216,11 @@ class CoinListItemViewHolder(private val binding: CoinListItemBinding)
         with(model.coinInfo) {
             binding.tvCoinName.text = name
             binding.tvCoinSymbol.text = symbol
-            binding.tvCoinPrice.text = price
+            binding.tvCoinPrice.text = if (price != null) {
+                "$ ${getDecimalFormat(price.toDouble())}"
+            } else {
+                "N/A"
+            }
             binding.tvCoinPriceTrend.text = change?.toDouble()?.absoluteValue.toString()
 
             val (textColor, image) = change?.toPriceTrendColor() ?: Pair(R.color.coinPriceUpColor, R.drawable.up_arrow)
@@ -236,7 +249,12 @@ private fun String.toPriceTrendColor() =
 
 class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBinding)
     : ItemViewHolder(binding) {
-    override fun bind(model: ItemViewModel) {}
+    override fun bind(model: ItemViewModel) {
+        model as ItemViewModel.InviteFriendItemViewModel
+        binding.tvCoinName.setOnClickListener {
+            model.clickListener?.invoke()
+        }
+    }
 }
 
 class TextSectionItemViewHolder(private val binding: TextListItemBinding): ItemViewHolder(binding) {

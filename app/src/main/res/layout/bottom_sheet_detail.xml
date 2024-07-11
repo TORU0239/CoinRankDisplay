@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:minHeight="534dp"
     android:orientation="vertical"
-    android:paddingTop="32dp">
+    android:paddingTop="32dp"
+    android:background="@color/coinDetailBackground">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline24dpBegin"
@@ -81,6 +82,7 @@
         android:textColor="@color/coinDetailSymbolName"
         android:textStyle="bold"
         android:textSize="12sp"
+        android:text="PRICE"
         android:includeFontPadding="false"
         app:layout_constraintStart_toEndOf="@id/imgCoin"
         app:layout_constraintTop_toBottomOf="@id/txtCoinName"
@@ -109,6 +111,7 @@
         android:textColor="@color/coinDetailSymbolName"
         android:textStyle="bold"
         android:textSize="12sp"
+        android:text="MARKET CAP"
         android:includeFontPadding="false"
         app:layout_constraintStart_toEndOf="@id/imgCoin"
         app:layout_constraintTop_toBottomOf="@id/txtCoinPrice"
@@ -160,6 +163,24 @@
         android:textStyle="bold"
         android:text="@string/go_to_website"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <FrameLayout
+        android:id="@+id/progressBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/coinDetailBackground"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Theme.ProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:progressTint="@color/progressBarColor"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
