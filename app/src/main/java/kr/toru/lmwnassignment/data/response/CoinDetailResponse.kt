@@ -63,9 +63,9 @@ data class Link(
 
 @Serializable
 data class Supply(
-    val confirmed: Boolean,
-    val supplyAt: Int,
-    val max: String,
-    val total: String,
-    val circulating: String,
+    val confirmed: Boolean? = false,
+    val supplyAt: Int? = -1,
+    val max: String? = "",
+    val total: String? = "",
+    val circulating: String? = "",
 )

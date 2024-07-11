@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetCoinDetailUseCaseImpl @Inject constructor(
     private val apiService: ApiService
 ): GetCoinDetailUseCase {
-    override suspend fun getCoinDetail(name: String): Result<CoinDetailResponse> = runCatching {
-        apiService.getCoinDetail(name).body<CoinDetailResponse>()
+    override suspend fun getCoinDetail(uuid: String): Result<CoinDetailResponse> = runCatching {
+        apiService.getCoinDetail(uuid).body<CoinDetailResponse>()
     }
 }
