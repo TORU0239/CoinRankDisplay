@@ -8,8 +8,10 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import kr.toru.lmwnassignment.data.usecase.GetCoinDetailUseCase
 import kr.toru.lmwnassignment.data.usecase.GetCoinsUseCase
+import kr.toru.lmwnassignment.data.usecase.SearchCoinsUseCase
 import kr.toru.lmwnassignment.data.usecase.impl.GetCoinDetailUseCaseImpl
 import kr.toru.lmwnassignment.data.usecase.impl.GetCoinsUseCaseImpl
+import kr.toru.lmwnassignment.data.usecase.impl.SearchCoinsUseCaseImpl
 import kr.toru.lmwnassignment.network.ApiService
 
 @Module
@@ -25,5 +27,11 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideGetCoinDetailUseCase(apiService: ApiService): GetCoinDetailUseCase {
         return GetCoinDetailUseCaseImpl(apiService = apiService)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideSearchCoinsUseCase(apiService: ApiService): SearchCoinsUseCase {
+        return SearchCoinsUseCaseImpl(apiService = apiService)
     }
 }

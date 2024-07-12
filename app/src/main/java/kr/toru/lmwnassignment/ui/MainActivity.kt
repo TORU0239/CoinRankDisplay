@@ -1,6 +1,5 @@
 package kr.toru.lmwnassignment.ui
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -16,16 +15,23 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.toru.lmwnassignment.R
 import kr.toru.lmwnassignment.data.response.CoinInfoResponse
+import kr.toru.lmwnassignment.data.response.SuggestedCoinResponse
 import kr.toru.lmwnassignment.databinding.ActivityMainBinding
 import kr.toru.lmwnassignment.presentation.adapter.CoinListAdapter
 import kr.toru.lmwnassignment.presentation.adapter.ItemViewModel
 import kr.toru.lmwnassignment.util.EditTextWatcher
+import kr.toru.lmwnassignment.util.textChangesToFlow
 import kr.toru.lmwnassignment.vm.MainViewModel
 import okhttp3.internal.filterList
 
+@OptIn(FlowPreview::class)
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private val textWatcher by lazy {
         EditTextWatcher { query ->
             if(query.isNotEmpty()) {
+
 
             } else {
 
@@ -78,17 +85,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var currentEvent: MainViewModel.Event? = null
+    private var currentListItem: List<ItemViewModel> = listOf()
+    private var currentOffset: Int = 0
 
     private fun initEventObserver() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                handleSearchBox()
+
                 viewModel.outputEventFlow.collect { result ->
                     when(result) {
                         is MainViewModel.Event.Success -> {
+                            currentListItem = convertResponse(result.data)
+                            currentOffset = result.currentOffset
+
                             (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(
-                                newItemList = convertResponse(result.data),
+                                newItemList = currentListItem,
                                 currentOffset = result.currentOffset
                             )
+
                             binding.swipeRefreshLayout.isRefreshing = false
                         }
                         is MainViewModel.Event.Failure -> {
@@ -102,6 +117,12 @@ class MainActivity : AppCompatActivity() {
                         is MainViewModel.Event.Loading -> {
                             currentEvent = result
                             binding.progressBar.visibility = if (result.isLoading) View.VISIBLE else View.GONE
+                        }
+
+                        is MainViewModel.Event.SearchSuccess -> {
+                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(
+                                newItemList = convertSearchResponse(result.data),
+                            )
                         }
                     }
                 }
@@ -187,6 +208,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun convertSearchResponse(
+        coinSearchResultResponse: List<SuggestedCoinResponse>
+    ): List<ItemViewModel> {
+        val textSectionItemViewModel = listOf(
+            ItemViewModel.TextSectionItemViewModel(
+                title = getString(R.string.coin_rank_label)
+            )
+        )
+
+        val suggestedCoinItemViewModels = coinSearchResultResponse.map { suggestedCoinResonse ->
+
+            ItemViewModel.CoinItemViewModel(
+                coinInfo = CoinInfoResponse(
+                    uuid = suggestedCoinResonse.uuid,
+                    name = suggestedCoinResonse.name,
+                    symbol = suggestedCoinResonse.symbol,
+                    iconUrl = suggestedCoinResonse.iconUrl,
+                    price = suggestedCoinResonse.price,
+                ),
+                clickListener = {
+                    showDetailBottomSheet(uuid = suggestedCoinResonse.uuid)
+                }
+            )
+        }
+
+        return textSectionItemViewModel + suggestedCoinItemViewModels
+    }
+
 
     private fun loadCoinList(isRefreshing: Boolean = false) {
         lifecycleScope.launch {
@@ -202,6 +251,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun initRecyclerView() {
         binding.rvSearchResult.run {
             adapter = CoinListAdapter()
@@ -209,6 +260,8 @@ class MainActivity : AppCompatActivity() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
+                    if (binding.edInputQuery.text.isNotEmpty()) return
+
                     val visibleItemCount = (layoutManager as LinearLayoutManager).childCount
                     val totalItemCount = (layoutManager as LinearLayoutManager).itemCount
                     val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
@@ -225,9 +278,9 @@ class MainActivity : AppCompatActivity() {
         binding.edInputQuery.addTextChangedListener(textWatcher)
         binding.edInputQuery.setText(queryKeyword)
         binding.edInputQuery.setOnFocusChangeListener { view, isFocused ->
-            if (isFocused) {
-                goToSearchScreen(binding.edInputQuery.text.toString())
-            }
+//            if (isFocused) {
+//                goToSearchScreen(binding.edInputQuery.text.toString())
+//            }
         }
 
 //        binding.imgInputCancel.setOnClickListener {
@@ -236,15 +289,20 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
-    private fun goToSearchScreen(currentQuery: String = "") {
-        val intent = Intent(this@MainActivity, SearchListActivity::class.java).apply {
-            putExtra("CurrentSearchQuery", currentQuery)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        }
-        startActivity(intent)
-        overridePendingTransition(0,0)
-        finish()
+    private fun handleSearchBox() {
+        val flow = binding.edInputQuery.textChangesToFlow()
+        flow.debounce(500)
+            .onEach { s ->
+                if ((s?.length ?: 0) < 1) {
+                    (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(
+                        newItemList = currentListItem,
+                        currentOffset = currentOffset
+                    )
+                } else {
+                    viewModel.getSearchKeyword(s.toString())
+                }
+            }
+            .launchIn(lifecycleScope)
     }
 
     private fun showDetailBottomSheet(uuid: String) {

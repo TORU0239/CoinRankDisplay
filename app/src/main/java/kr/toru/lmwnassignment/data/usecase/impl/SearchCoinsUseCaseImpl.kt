@@ -6,7 +6,7 @@ import kr.toru.lmwnassignment.data.usecase.SearchCoinsUseCase
 import kr.toru.lmwnassignment.network.ApiService
 import javax.inject.Inject
 
-class SearchCoinsUseCase @Inject constructor (
+class SearchCoinsUseCaseImpl @Inject constructor (
     private val apiService: ApiService
 ): SearchCoinsUseCase {
     override suspend fun searchCoins(query: String): Result<CoinSuggestionResponse> = runCatching {
