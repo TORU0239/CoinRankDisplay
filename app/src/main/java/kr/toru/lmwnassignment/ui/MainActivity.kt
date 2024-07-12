@@ -8,7 +8,6 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -23,6 +22,7 @@ import kr.toru.lmwnassignment.data.response.CoinInfoResponse
 import kr.toru.lmwnassignment.databinding.ActivityMainBinding
 import kr.toru.lmwnassignment.presentation.adapter.CoinListAdapter
 import kr.toru.lmwnassignment.presentation.adapter.ItemViewModel
+import kr.toru.lmwnassignment.util.EditTextWatcher
 import kr.toru.lmwnassignment.vm.MainViewModel
 import okhttp3.internal.filterList
 
@@ -33,6 +33,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var queryKeyword: String? = null
+
+    private val textWatcher by lazy {
+        EditTextWatcher { query ->
+            if(query.isNotEmpty()) {
+
+            } else {
+
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,8 +53,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initWindowInset()
-        initRecyclerView()
+        initTopEditText()
         initSwipeRefreshLayout()
+        initRecyclerView()
         initEventObserver()
         loadCoinList(true)
     }
@@ -206,6 +219,32 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun initTopEditText() {
+        binding.edInputQuery.addTextChangedListener(textWatcher)
+        binding.edInputQuery.setText(queryKeyword)
+        binding.edInputQuery.setOnFocusChangeListener { view, isFocused ->
+            if (isFocused) {
+                goToSearchScreen(binding.edInputQuery.text.toString())
+            }
+        }
+
+//        binding.imgInputCancel.setOnClickListener {
+//            binding.edInputQuery.text.clear()
+//            goToSearchScreen()
+//        }
+    }
+
+    private fun goToSearchScreen(currentQuery: String = "") {
+        val intent = Intent(this@MainActivity, SearchListActivity::class.java).apply {
+            putExtra("CurrentSearchQuery", currentQuery)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        startActivity(intent)
+        overridePendingTransition(0,0)
+        finish()
     }
 
     private fun showDetailBottomSheet(uuid: String) {
