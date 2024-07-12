@@ -27,6 +27,7 @@ import kr.toru.lmwnassignment.databinding.ActivityMainBinding
 import kr.toru.lmwnassignment.presentation.adapter.CoinListAdapter
 import kr.toru.lmwnassignment.presentation.adapter.ItemViewModel
 import kr.toru.lmwnassignment.util.EditTextWatcher
+import kr.toru.lmwnassignment.util.hideKeyboard
 import kr.toru.lmwnassignment.util.textChangesToFlow
 import kr.toru.lmwnassignment.vm.MainViewModel
 import okhttp3.internal.filterList
@@ -44,10 +45,9 @@ class MainActivity : AppCompatActivity() {
     private val textWatcher by lazy {
         EditTextWatcher { query ->
             if(query.isNotEmpty()) {
-
-
+                binding.imgClear.visibility = View.VISIBLE
             } else {
-
+                binding.imgClear.visibility = View.GONE
             }
         }
     }
@@ -285,16 +285,11 @@ class MainActivity : AppCompatActivity() {
     private fun initTopEditText() {
         binding.edInputQuery.addTextChangedListener(textWatcher)
         binding.edInputQuery.setText(queryKeyword)
-        binding.edInputQuery.setOnFocusChangeListener { view, isFocused ->
-//            if (isFocused) {
-//                goToSearchScreen(binding.edInputQuery.text.toString())
-//            }
+        binding.imgClear.setOnClickListener {
+            binding.edInputQuery.text.clear()
+            binding.rvSearchResult.requestFocus()
+            hideKeyboard()
         }
-
-//        binding.imgInputCancel.setOnClickListener {
-//            binding.edInputQuery.text.clear()
-//            goToSearchScreen()
-//        }
     }
 
     private fun handleSearchBox() {
