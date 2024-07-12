@@ -40,4 +40,7 @@
 
     <color name="goToWebsiteBtnColor">#38A0FF</color>
 
+    <color name="noItemTopBoldColor">@color/coinDetailSymbolName</color>
+    <color name="noItemBottomColor">@color/coinDetailDescrptiion</color>
+
 </resources>

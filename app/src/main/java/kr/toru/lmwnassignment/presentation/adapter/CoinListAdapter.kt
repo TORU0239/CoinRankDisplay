@@ -16,6 +16,7 @@ import kr.toru.lmwnassignment.databinding.CoinListItemBinding
 import kr.toru.lmwnassignment.databinding.CoinTopRankListItemBinding
 import kr.toru.lmwnassignment.databinding.InviteFriendListItemBinding
 import kr.toru.lmwnassignment.databinding.LoadFailureListItemBinding
+import kr.toru.lmwnassignment.databinding.NoSearchResultListItemBinding
 import kr.toru.lmwnassignment.databinding.TextListItemBinding
 import okhttp3.internal.filterList
 import java.math.RoundingMode
@@ -50,9 +51,14 @@ class CoinListAdapter(
                     InviteFriendListItemBinding.inflate(inflater, parent, false)
                 )
             }
-            else -> {
+            4 -> {
                 LoadFailureItemViewHolder(
                     LoadFailureListItemBinding.inflate(inflater, parent, false)
+                )
+            }
+            else -> {
+                NoItemSearchResultItemViewHolder(
+                    NoSearchResultListItemBinding.inflate(inflater, parent, false)
                 )
             }
         }
@@ -71,6 +77,7 @@ class CoinListAdapter(
             is ItemViewModel.TextSectionItemViewModel -> 2
             is ItemViewModel.InviteFriendItemViewModel -> 3
             is ItemViewModel.LoadFailureItemViewModel -> 4
+            is ItemViewModel.NoItemSearchResultItemViewModel -> 5
         }
     }
 
@@ -117,6 +124,10 @@ sealed class ItemViewModel {
     ): ItemViewModel()
 
     data class LoadFailureItemViewModel(
+        val onClickListener: (()->Unit)? = null
+    ): ItemViewModel()
+
+    data class NoItemSearchResultItemViewModel(
         val onClickListener: (()->Unit)? = null
     ): ItemViewModel()
 }
@@ -247,8 +258,9 @@ private fun String.toPriceTrendColor() =
         else -> Pair(R.color.coinPriceUpColor, R.drawable.up_arrow)
     }
 
-class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBinding)
-    : ItemViewHolder(binding) {
+class InviteFriendItemViewHolder(
+    private val binding: InviteFriendListItemBinding
+) : ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.InviteFriendItemViewModel
         binding.tvCoinName.setOnClickListener {
@@ -257,20 +269,30 @@ class InviteFriendItemViewHolder(private val binding: InviteFriendListItemBindin
     }
 }
 
-class TextSectionItemViewHolder(private val binding: TextListItemBinding): ItemViewHolder(binding) {
+class TextSectionItemViewHolder(
+    private val binding: TextListItemBinding
+): ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.TextSectionItemViewModel
         binding.txtTitle.text = model.title
     }
 }
 
-class LoadFailureItemViewHolder(private val binding: LoadFailureListItemBinding): ItemViewHolder(binding) {
+class LoadFailureItemViewHolder(
+    private val binding: LoadFailureListItemBinding
+): ItemViewHolder(binding) {
     override fun bind(model: ItemViewModel) {
         model as ItemViewModel.LoadFailureItemViewModel
         binding.txtTryAgain.setOnClickListener {
             model.onClickListener?.invoke()
         }
     }
+}
+
+class NoItemSearchResultItemViewHolder(
+    private val binding: NoSearchResultListItemBinding
+): ItemViewHolder(binding) {
+    override fun bind(model: ItemViewModel) {}
 }
 
 abstract class ItemViewHolder(private val binding: ViewBinding): ViewHolder(binding.root) {

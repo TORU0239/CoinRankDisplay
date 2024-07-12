@@ -124,6 +124,14 @@ class MainActivity : AppCompatActivity() {
                                 newItemList = convertSearchResponse(result.data),
                             )
                         }
+
+                        is MainViewModel.Event.SearchNoItem, MainViewModel.Event.SearchFailure -> {
+                            (binding.rvSearchResult.adapter as CoinListAdapter).addNewData(
+                                newItemList = listOf(
+                                    ItemViewModel.NoItemSearchResultItemViewModel()
+                                )
+                            )
+                        }
                     }
                 }
             }

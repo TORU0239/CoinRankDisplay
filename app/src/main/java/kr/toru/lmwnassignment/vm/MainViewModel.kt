@@ -77,14 +77,14 @@ class MainViewModel @Inject constructor(
         callApi {
             searchCoinsUseCase.searchCoins(searchKeyword)
                 .onSuccess {
-                    it.data.coins.forEach { coinResponse ->
-                        Log.e("Toru", "response: ${coinResponse.name}, ${coinResponse.price}")
+                    if (it.data.coins.isEmpty()) {
+                        Event.SearchNoItem.emitEvent()
+                    } else {
+                        Event.SearchSuccess(data = it.data.coins).emitEvent()
                     }
-
-                    Event.SearchSuccess(data = it.data.coins).emitEvent()
                 }
                 .onFailure {
-
+                    Event.SearchFailure.emitEvent()
                 }
         }
     }
@@ -114,6 +114,10 @@ class MainViewModel @Inject constructor(
         data class SearchSuccess(
             val data: List<SuggestedCoinResponse>
         ): Event
+
+        data object SearchNoItem: Event
+
+        data object SearchFailure: Event
     }
 
     override fun onCleared() {
